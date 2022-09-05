@@ -1,9 +1,9 @@
-window.$ = window.jQuery = function (selectorOrArrayOrTemplate) {
+window.jQuery = function (selectorOrArrayOrTemplate) {
   let elements;
   if (typeof selectorOrArrayOrTemplate === "string") {
     if (selectorOrArrayOrTemplate[0] === "<") {
       // 创建 div
-      elements = [createElements(selectorOrArrayOrTemplate)];
+      elements = [createElement(selectorOrArrayOrTemplate)];
     } else {
       // 查找 div
       elements = document.querySelectorAll(selectorOrArrayOrTemplate);
@@ -11,8 +11,8 @@ window.$ = window.jQuery = function (selectorOrArrayOrTemplate) {
   } else if (selectorOrArrayOrTemplate instanceof Array) {
     elements = selectorOrArrayOrTemplate;
   }
-  function createElements(string) {
-    const container = document.Element("template");
+  function createElement(string) {
+    const container = document.createElement("template");
     container.innerHTML = string.trim();
     return container.content.firstChild;
   }
@@ -31,7 +31,7 @@ window.$ = window.jQuery = function (selectorOrArrayOrTemplate) {
 
 jQuery.fn = jQuery.prototype = {
   constructor: jQuery,
-  jQuery: true,
+  jquery: true,
   get(index) {
     return this.elements[index];
   },
@@ -55,16 +55,16 @@ jQuery.fn = jQuery.prototype = {
   },
   find(selector) {
     let array = [];
-    for (let i = 0; i < elements.length; i++) {
-      const elements2 = Array.from(elements[i].querySelectorAll(selector));
+    for (let i = 0; i < this.elements.length; i++) {
+      const elements2 = Array.from(this.elements[i].querySelectorAll(selector));
       array = array.concat(elements2);
     }
     array.oldApi = this; // this 是旧 api
     return jQuery(array);
   },
   each(fn) {
-    for (let i = 0; i < elements.length; i++) {
-      fn.call(null, elements[i], i);
+    for (let i = 0; i < this.elements.length; i++) {
+      fn.call(null, this.elements[i], i);
     }
   },
   parent() {
@@ -84,18 +84,19 @@ jQuery.fn = jQuery.prototype = {
     return jQuery(array);
   },
   print() {
-    console.log(elements);
+    console.log(this.elements);
   },
   // 闭包：函数访问外部变量
   addClass(className) {
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
+    for (let i = 0; i < this.elements.length; i++) {
+      const element = this.elements[i];
       element.classList.add(className);
     }
     return this;
   },
-  oldApi: selectorOrArray.oldApi,
   end() {
     return this.oldApi; // this 是新 api
   },
 };
+
+window.$ = window.jQuery;

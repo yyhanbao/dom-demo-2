@@ -130,13 +130,13 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-window.$ = window.jQuery = function (selectorOrArrayOrTemplate) {
+window.jQuery = function (selectorOrArrayOrTemplate) {
   var elements;
 
   if (typeof selectorOrArrayOrTemplate === "string") {
     if (selectorOrArrayOrTemplate[0] === "<") {
       // 创建 div
-      elements = [createElements(selectorOrArrayOrTemplate)];
+      elements = [createElement(selectorOrArrayOrTemplate)];
     } else {
       // 查找 div
       elements = document.querySelectorAll(selectorOrArrayOrTemplate);
@@ -145,8 +145,8 @@ window.$ = window.jQuery = function (selectorOrArrayOrTemplate) {
     elements = selectorOrArrayOrTemplate;
   }
 
-  function createElements(string) {
-    var container = document.Element("template");
+  function createElement(string) {
+    var container = document.createElement("template");
     container.innerHTML = string.trim();
     return container.content.firstChild;
   } // api 可以操作 elements
@@ -166,7 +166,7 @@ window.$ = window.jQuery = function (selectorOrArrayOrTemplate) {
 
 jQuery.fn = jQuery.prototype = {
   constructor: jQuery,
-  jQuery: true,
+  jquery: true,
   get: function get(index) {
     return this.elements[index];
   },
@@ -174,11 +174,11 @@ jQuery.fn = jQuery.prototype = {
     if (node instanceof Element) {
       this.each(function (el) {
         return node.appendChild(el);
-      });
+      }); // 遍历 elements，对每个 el 进行 node.appendChild 操作
     } else if (node.jQuery === true) {
       this.each(function (el) {
         return node.get(0).appendChild(el);
-      });
+      }); // 遍历 elements，对每个 el 进行 node.get(0).appendChild(el))
     }
   },
   append: function append(children) {
@@ -199,8 +199,8 @@ jQuery.fn = jQuery.prototype = {
   find: function find(selector) {
     var array = [];
 
-    for (var i = 0; i < elements.length; i++) {
-      var elements2 = Array.from(elements[i].querySelectorAll(selector));
+    for (var i = 0; i < this.elements.length; i++) {
+      var elements2 = Array.from(this.elements[i].querySelectorAll(selector));
       array = array.concat(elements2);
     }
 
@@ -209,8 +209,8 @@ jQuery.fn = jQuery.prototype = {
     return jQuery(array);
   },
   each: function each(fn) {
-    for (var i = 0; i < elements.length; i++) {
-      fn.call(null, elements[i], i);
+    for (var i = 0; i < this.elements.length; i++) {
+      fn.call(null, this.elements[i], i);
     }
   },
   parent: function parent() {
@@ -230,22 +230,22 @@ jQuery.fn = jQuery.prototype = {
     return jQuery(array);
   },
   print: function print() {
-    console.log(elements);
+    console.log(this.elements);
   },
   // 闭包：函数访问外部变量
   addClass: function addClass(className) {
-    for (var i = 0; i < elements.length; i++) {
-      var element = elements[i];
+    for (var i = 0; i < this.elements.length; i++) {
+      var element = this.elements[i];
       element.classList.add(className);
     }
 
     return this;
   },
-  oldApi: selectorOrArray.oldApi,
   end: function end() {
     return this.oldApi; // this 是新 api
   }
 };
+window.$ = window.jQuery;
 },{}],"../../../../../Users/Candy/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -274,7 +274,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56245" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56877" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

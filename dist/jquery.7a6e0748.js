@@ -117,12 +117,136 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"main.js":[function(require,module,exports) {
-jQuery(".test").find(".child").addClass("red").addClass("blue").addClass("green").end().addClass("yellow");
-var x = jQuery(".test");
-x.parent().print();
-var $div = $("<div>1</div>");
-$div.appendTo(document.body);
+})({"jquery.js":[function(require,module,exports) {
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+window.jQuery = function (selectorOrArrayOrTemplate) {
+  var elements;
+
+  if (typeof selectorOrArrayOrTemplate === "string") {
+    if (selectorOrArrayOrTemplate[0] === "<") {
+      // 创建 div
+      elements = [createElements(selectorOrArrayOrTemplate)];
+    } else {
+      // 查找 div
+      elements = document.querySelectorAll(selectorOrArrayOrTemplate);
+    }
+  } else if (selectorOrArrayOrTemplate instanceof Array) {
+    elements = selectorOrArrayOrTemplate;
+  }
+
+  function createElements(string) {
+    var container = document.Element("template");
+    container.innerHTML = string.trim();
+    return container.content.firstChild;
+  } // api 可以操作 elements
+
+
+  var api = Object.create(jQuery.prototype); // 创建一个对象，这个对象的 __proto__ 为括号里面的东西
+  // const api = {__proto__:jQuery.prototype}
+
+  Object.assign(api, {
+    elements: elements,
+    oldApi: selectorOrArrayOrTemplate.oldApi
+  }); // api.elements = elements
+  // api.oldApi=selectorOrArrayOrTemplate.oldApi
+
+  return api;
+};
+
+jQuery.fn = jQuery.prototype = {
+  constructor: jQuery,
+  jquery: true,
+  get: function get(index) {
+    return this.elements[index];
+  },
+  appendTo: function appendTo(node) {
+    if (node instanceof Element) {
+      this.each(function (el) {
+        return node.appendChild(el);
+      }); // 遍历 elements，对每个 el 进行 node.appendChild 操作
+    } else if (node.jQuery === true) {
+      this.each(function (el) {
+        return node.get(0).appendChild(el);
+      }); // 遍历 elements，对每个 el 进行 node.get(0).appendChild(el))
+    }
+  },
+  append: function append(children) {
+    var _this = this;
+
+    if (children instanceof Element) {
+      this.get(0).appendChild(children);
+    } else if (children instanceof HTMLCollection) {
+      for (var i = 0; i < children.length; i++) {
+        this.get(0).appendChild(children[i]);
+      }
+    } else if (children.jQuery === true) {
+      children.each(function (node) {
+        return _this.get(0).appendChild(node);
+      });
+    }
+  },
+  find: function find(selector) {
+    var array = [];
+
+    for (var i = 0; i < this.elements.length; i++) {
+      var elements2 = Array.from(this.elements[i].querySelectorAll(selector));
+      array = array.concat(elements2);
+    }
+
+    array.oldApi = this; // this 是旧 api
+
+    return jQuery(array);
+  },
+  each: function each(fn) {
+    for (var i = 0; i < this.elements.length; i++) {
+      fn.call(null, this.elements[i], i);
+    }
+  },
+  parent: function parent() {
+    var array = [];
+    this.each(function (node) {
+      if (array.indexOf(node.parentNode) === -1) {
+        array.push(node.parentNode);
+      }
+    });
+    return jQuery(array);
+  },
+  children: function children() {
+    var array = [];
+    this.each(function (node) {
+      array.push.apply(array, _toConsumableArray(node.children));
+    });
+    return jQuery(array);
+  },
+  print: function print() {
+    console.log(this.elements);
+  },
+  // 闭包：函数访问外部变量
+  addClass: function addClass(className) {
+    for (var i = 0; i < this.elements.length; i++) {
+      var element = this.elements[i];
+      element.classList.add(className);
+    }
+
+    return this;
+  },
+  oldApi: this.oldApi,
+  end: function end() {
+    return this.oldApi; // this 是新 api
+  }
+};
+window.$ = window.jQuery;
 },{}],"../../../../../Users/Candy/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -326,5 +450,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../../Users/Candy/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js","main.js"], null)
-//# sourceMappingURL=/main.1f19ae8e.js.map
+},{}]},{},["../../../../../Users/Candy/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js","jquery.js"], null)
+//# sourceMappingURL=/jquery.7a6e0748.js.map
